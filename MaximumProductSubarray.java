@@ -45,7 +45,6 @@ public class MaximumProductSubarray {
                     if(maxPartial > maxProductTillNow)
                         maxProductTillNow=maxPartial;
                 }
-
             }
             else
             {
@@ -54,7 +53,6 @@ public class MaximumProductSubarray {
                 if(maxPartial > maxProductTillNow)
                     maxProductTillNow=maxPartial;
             }
-
 
             if(i==0 && maxNegetiveProduct != 1)
                 maxProductTillNow=maxNegetiveProduct;
