@@ -1,3 +1,5 @@
+/* Needs minor correction */
+
 import java.util.Arrays;
 
 public class MaximumProductSubarray {
