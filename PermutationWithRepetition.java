@@ -96,7 +96,6 @@ public class PermutationWithRepetition {
         {
             alreadySeen.addAll(countingMap.keySet());
             masterList.add(alreadySeen);
-            count++;
             return;
         }
 
