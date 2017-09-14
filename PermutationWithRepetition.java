@@ -105,10 +105,6 @@ public class PermutationWithRepetition {
             List<Integer> localAlreadySeen= new ArrayList<>();
             for(int i=1;i<=targetCount;i++)
             {
-                if(alreadySeen.peekLast() != null && alreadySeen.peekLast()== target)
-                    continue;
-
-
                 localAlreadySeen.add(target);
 
                 HashMap<Integer,Integer> clonedMap = (HashMap<Integer, Integer>) countingMap.clone();
