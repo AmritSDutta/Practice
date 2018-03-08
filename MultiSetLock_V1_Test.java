@@ -57,7 +57,7 @@ public class MultiSetLock_V1_Test {
         };
 
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 2000; i++) {
 
             new Thread(r).start();
             try {
@@ -75,11 +75,11 @@ public class MultiSetLock_V1_Test {
         }
 
         try {
-            Thread.sleep(3000);
+            Thread.sleep(20000);
         } catch (Exception e) {
             System.out.println(e);
         }
-        System.out.println("Finished UseCase : " + MultiSetLock.getLockCount());
+        System.out.println("Finished UseCase : " + MultiSetLock_V1.getLockCount());
 
     }
 }

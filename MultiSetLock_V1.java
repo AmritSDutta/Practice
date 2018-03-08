@@ -1,3 +1,5 @@
+package com.trs.estimation;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -7,7 +9,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public final class MultiSetLock_V1 {
 
-    private static volatile Map<String, ReentrantReadWriteLock> allLocks = new ConcurrentHashMap<>();
+    private static Map<String, ReentrantReadWriteLock> allLocks = new ConcurrentHashMap<>();
     private static final ReentrantReadWriteLock allLocksProtector = new ReentrantReadWriteLock();
     private final Set<String> allItemSet;
     private static volatile int lockCount = 0;
@@ -88,7 +90,7 @@ public final class MultiSetLock_V1 {
      */
      private LinkedHashSet<ReentrantReadWriteLock> getExistingLocks() {
         LinkedHashSet<ReentrantReadWriteLock> existingLock = null;
-        allLocksProtector.writeLock().lock();
+        allLocksProtector.readLock().lock();
         try {
             boolean lockAlreadyHeld = this.allItemSet.stream().anyMatch(item -> allLocks.containsKey(item));
             if (lockAlreadyHeld) {
@@ -102,7 +104,7 @@ public final class MultiSetLock_V1 {
         } catch (Exception e) {
             System.out.println(e);
         } finally {
-            allLocksProtector.writeLock().unlock();
+            allLocksProtector.readLock().unlock();
             return existingLock;
         }
     }
