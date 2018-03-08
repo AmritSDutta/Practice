@@ -6,6 +6,21 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * This class provides implementation of lock for items which are Set<String>
+ *     for example , lets next 3 request comes almost same time-
+ *     1) {1,2,3}
+ *     2){3,4,5}
+ *     3){7,8,9}
+ *
+ *     Then 3rd req will always acquire lock , but
+ *     only one of the 1 and 2 will get the lock others have
+ *     to wait for the set which got the lock first time.
+ *
+ *     End result :
+ *     MultiSet lock algorithm should have following properties
+ *     1) Mutual Exclusion
+ *     2) Progress
+ *     3) Deadlock freedom
+ *     4) Indefinite wait - not addressed through this algorithm.
  */
 public final class MultiSetLock_V1 {
 
