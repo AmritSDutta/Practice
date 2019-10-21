@@ -1,69 +1,66 @@
-/* Needs minor correction */
+/* Tested in LeetCode, performance can be further improved, but algo is correct, based on classical DP.*/
 
 import java.util.Arrays;
 
 public class MaximumProductSubarray {
 
-    public static void main(String args[])
-    {
-        int arr[] = {2,-3,4,5,-2,-2,0,9,8};
-        printArray(arr);
-        System.out.println(getMaximumProduct(arr));
-
-        int arr1[] = {-2,-2,-2,-2,-2};
-        printArray(arr1);
-        System.out.println(getMaximumProduct(arr1));
-
-        int arr2[] = {-2,0,-2,0,-2};
-        printArray(arr2);
-        System.out.println(getMaximumProduct(arr2));
-
-        int arr3[] = {-2};
-        printArray(arr3);
-        System.out.println(getMaximumProduct(arr3));
+    public static void main(String[] args) {
+       int[] array = new int[]{5, 0, -2, 1, -5, 0, 7};
+        maximumProductSubArray(array);
     }
 
-    public static int getMaximumProduct(int[] arr)
-    {
-        int maxPartial=1;
-        int maxProductTillNow=-9999;
-        int maxNegetiveProduct=1;
-        for(int i=0;i<arr.length;i++)
-        {
-            if(arr[i]==0)
-            {
-                maxPartial=1;
-                maxNegetiveProduct=1;
-                if(maxProductTillNow < 0)
-                    maxProductTillNow=0;
-            }
-            else if(arr[i]< 0)
-            {
-                maxNegetiveProduct = maxNegetiveProduct* arr[i];
-                if(maxNegetiveProduct > maxPartial)
-                {
-                    maxPartial=maxNegetiveProduct;
+    static void maximumProductSubArray(int[] arr) {
+        int[][] intermediateResult = new int[2][arr.length];
+        int MAX = arr[0];
+        int finalI = 0;
+        int finalJ = 0;
 
-                    if(maxPartial > maxProductTillNow)
-                        maxProductTillNow=maxPartial;
+        initializeProductSubArrayIntemediate(arr, intermediateResult, MAX, finalI, finalJ);
+
+        for (int k = 1; k <= arr.length; k++) {
+            for (int j = k; j < arr.length; j++) {
+                intermediateResult[1][j] = intermediateResult[0][j - 1] * arr[j];
+                if (MAX < intermediateResult[1][j]) {
+                    MAX = intermediateResult[1][j];
+                    finalI = j - k;
+                    finalJ = j;
                 }
             }
-            else
-            {
-                maxPartial=maxPartial*arr[i];
-                maxNegetiveProduct = maxNegetiveProduct* arr[i];
-                if(maxPartial > maxProductTillNow)
-                    maxProductTillNow=maxPartial;
-            }
-
-            if(i==0 && maxNegetiveProduct != 1)
-                maxProductTillNow=maxNegetiveProduct;
+            printSubArray(intermediateResult);
+            transferContent(intermediateResult);
         }
-        return maxProductTillNow;
+        System.out.println(" MAX : " + MAX + " ," + finalI + " , " + finalJ);
     }
 
-    static void printArray(int arr[])
-    {
-        System.out.print("\n\n"+Arrays.toString(arr) + " : \n");
+    private static void initializeProductSubArrayIntemediate(int[] arr, int[][] intermediateResult, int MAX, int finalI, int finalJ) {
+        intermediateResult[0][0] = arr[0];
+        for (int i = 1; i < arr.length; i++) {
+            intermediateResult[0][i] = arr[i];
+            if (MAX < arr[i]) {
+                MAX = arr[i];
+                finalI = i;
+                finalJ = i;
+            }
+        }
+        printSubArray(intermediateResult);
     }
+
+    private static void printSubArray(int[][] intermediateResult) {
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < intermediateResult[0].length; j++)
+                System.out.print(intermediateResult[i][j] + " ");
+            System.out.println();
+        }
+        System.out.println();
+        System.out.println();
+
+    }
+
+    private static void transferContent(int[][] intermediateResult) {
+        for (int i = 0; i < intermediateResult[0].length; i++) {
+            intermediateResult[0][i] = intermediateResult[1][i];
+        }
+
+    }
+}
 }
