@@ -15,7 +15,17 @@ public class MaximumProductSubarray {
         int finalI = 0;
         int finalJ = 0;
 
-        initializeProductSubArrayIntemediate(arr, intermediateResult, MAX, finalI, finalJ);
+        //Initialize
+        intermediateResult[0][0] = arr[0];
+        for (int i = 1; i < arr.length; i++) {
+            intermediateResult[0][i] = arr[i];
+            if (MAX < arr[i]) {
+                MAX = arr[i];
+                finalI = i;
+                finalJ = i;
+            }
+        }
+        printSubArray(intermediateResult);
 
         for (int k = 1; k <= arr.length; k++) {
             for (int j = k; j < arr.length; j++) {
@@ -30,19 +40,6 @@ public class MaximumProductSubarray {
             transferContent(intermediateResult);
         }
         System.out.println(" MAX : " + MAX + " ," + finalI + " , " + finalJ);
-    }
-
-    private static void initializeProductSubArrayIntemediate(int[] arr, int[][] intermediateResult, int MAX, int finalI, int finalJ) {
-        intermediateResult[0][0] = arr[0];
-        for (int i = 1; i < arr.length; i++) {
-            intermediateResult[0][i] = arr[i];
-            if (MAX < arr[i]) {
-                MAX = arr[i];
-                finalI = i;
-                finalJ = i;
-            }
-        }
-        printSubArray(intermediateResult);
     }
 
     private static void printSubArray(int[][] intermediateResult) {
