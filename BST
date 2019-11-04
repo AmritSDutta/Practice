@@ -1,0 +1,404 @@
+import javafx.util.Pair;
+
+import java.util.*;
+
+public class BST<T extends Comparable<T>> {
+    BstNode<T> root = null;
+    int diameter=0;
+
+
+    public BstNode<T> getRoot() {
+        return root;
+    }
+
+    public void setRoot(BstNode<T> root) {
+        this.root = root;
+    }
+
+    public void bulkInsert(T[] allData) {
+        if (allData != null && allData.length > 0) {
+            for (T data : allData) {
+                insert(data);
+            }
+        }
+    }
+
+    public void insert(T data) {
+        if (this.root == null) {
+            this.root = new BstNode(data);
+            return;
+        }
+        BstNode<T> start = this.root;
+        while (start != null) {
+            int comparisionResult = start.getData().compareTo(data);
+            if (comparisionResult == 0)
+                throw new RuntimeException("Similar data already exists.");
+            else if (start.getData().compareTo(data) > 0) {
+                if (start.getLeft() != null)
+                    start = start.getLeft();
+                else {
+                    start.setLeft(new BstNode(data));
+                    return;
+                }
+            } else {
+                if (start.getRight() != null)
+                    start = start.getRight();
+                else {
+                    start.setRight(new BstNode(data));
+                    return;
+                }
+            }
+        }
+    }
+
+    public void printPreOrder() {
+        System.out.println("PreOrder");
+
+        if (this.root != null) {
+            BstNode<T> start = this.root;
+            printPOrder(start);
+            System.out.println();
+        } else {
+            System.out.println("Empty Tree");
+        }
+
+    }
+
+    public int getDiameter() {
+        getDiameterRecursive(this.root);
+        int result = diameter;
+        diameter=0;
+        return result;
+    }
+
+    public void printInOrder() {
+        System.out.println("InOrder");
+
+        if (this.root != null) {
+            BstNode<T> start = this.root;
+            printIOrder(start);
+            System.out.println();
+
+        } else {
+            System.out.println("Empty Tree");
+        }
+
+    }
+
+    public void printPostOrder() {
+        System.out.println("PostOrder");
+
+        if (this.root != null) {
+            BstNode<T> start = this.root;
+            printPoOrder(start);
+        } else {
+            System.out.println("Empty Tree");
+        }
+
+    }
+
+    public void printKthSmallest(int kth) {
+        System.out.println("KthSmallest : ( "+ kth + " )");
+
+        if(kth <= 0)
+            System.out.println("Kth should start from 1");
+
+        if (this.root != null) {
+            BstNode<T> start = this.root;
+            printKS(start, kth);
+            System.out.println();
+        } else {
+            System.out.println("Empty Tree");
+        }
+
+    }
+
+    public void printTopView()
+    {
+        TreeMap<Integer,T> finalView= new TreeMap<>();
+
+        if (this.root != null) {
+            BstNode<T> start = this.root;
+            buildTV(start, finalView, 0);
+            System.out.println(finalView.values());
+        } else {
+            System.out.println("Empty Tree");
+        }
+
+    }
+
+    public void printBFS()
+    {
+        Queue<BstNode<T>> workingQueue = new LinkedList<>();
+        if (this.root != null) {
+            BstNode<T> start = this.root;
+            workingQueue.add(start);
+            while(!workingQueue.isEmpty())
+            {
+                BstNode<T> now= workingQueue.remove();
+                System.out.print(now.getData() + " ");
+                if(now.getLeft() != null)
+                    workingQueue.add(now.getLeft());
+                if(now.getRight() != null)
+                    workingQueue.add(now.getRight());
+            }
+        } else {
+            System.out.println("Empty Tree");
+        }
+    }
+
+    public void printRightView()
+    {
+        System.out.println("RightView");
+        TreeMap<Integer,T> rightView = new TreeMap<>();
+        Queue<BstNode<T>> workingQueue = new LinkedList<>();
+        if (this.root != null) {
+            BstNode<T> start = this.root;
+            start.setLevel(1);
+            workingQueue.add(start);
+            while(!workingQueue.isEmpty())
+            {
+                BstNode<T> now= workingQueue.remove();
+                rightView.put(now.getLevel(),now.getData());
+                //System.out.print(now.getData() + " ");
+                if(now.getLeft() != null)
+                {
+                    BstNode<T> left = now.getLeft();
+                    left.setLevel(now.getLevel()+1);
+                    workingQueue.add(left);
+
+                }
+                if(now.getRight() != null)
+                {
+                    BstNode<T> right = now.getRight();
+                    right.setLevel(now.getLevel()+1);
+                    workingQueue.add(right);
+
+                }
+            }
+        } else {
+            System.out.println("Empty Tree");
+        }
+        System.out.println(rightView.values());
+    }
+
+    public void printLeftView()
+    {
+        System.out.println("LeftView");
+        TreeMap<Integer,T> leftView = new TreeMap<>();
+        Queue<BstNode<T>> workingQueue = new LinkedList<>();
+        if (this.root != null) {
+            BstNode<T> start = this.root;
+            start.setLevel(1);
+            workingQueue.add(start);
+            while(!workingQueue.isEmpty())
+            {
+                BstNode<T> now= workingQueue.remove();
+                leftView.putIfAbsent(now.getLevel(),now.getData());
+                //System.out.print(now.getData() + " ");
+                if(now.getLeft() != null)
+                {
+                    BstNode<T> left = now.getLeft();
+                    left.setLevel(now.getLevel()+1);
+                    workingQueue.add(left);
+
+                }
+                if(now.getRight() != null)
+                {
+                    BstNode<T> right = now.getRight();
+                    right.setLevel(now.getLevel()+1);
+                    workingQueue.add(right);
+
+                }
+            }
+        } else {
+            System.out.println("Empty Tree");
+        }
+        System.out.println(leftView.values());
+    }
+
+    public Collection<T> printRightViewAlt()
+    {
+        System.out.println("RightView");
+        TreeMap<Integer,T> rightView = new TreeMap<>();
+        Queue<Pair<Integer,BstNode<T>>> workingQueue = new LinkedList<>();
+        if (this.root != null) {
+            BstNode<T> start = this.root;
+            workingQueue.add(new Pair<>(1,start));
+            while(!workingQueue.isEmpty())
+            {
+                Pair<Integer,BstNode<T>> now= workingQueue.remove();
+                rightView.put(now.getKey(),now.getValue().getData());
+                //System.out.print(now.getData() + " ");
+                if(now.getValue().getLeft() != null)
+                {
+                    BstNode<T> left = now.getValue().getLeft();
+                    workingQueue.add(new Pair<>(now.getKey()+1,left));
+
+                }
+                if(now.getValue().getRight() != null)
+                {
+                    BstNode<T> right = now.getValue().getRight();
+                    workingQueue.add(new Pair<>(now.getKey()+1,right));
+
+                }
+            }
+        } else {
+            return null;
+        }
+        return rightView.values();
+    }
+
+
+    private void printPOrder(BstNode<T> node) {
+        if (node != null) {
+            System.out.print(node.getData() + " ");
+            printPOrder(node.getLeft());
+            printPOrder(node.getRight());
+        }
+    }
+
+   
+
+    private void printIOrder(BstNode<T> node) {
+        if (node != null) {
+            printIOrder(node.getLeft());
+            System.out.print(node.getData() + " ");
+            printIOrder(node.getRight());
+        }
+    }
+
+    
+
+    private void printPoOrder(BstNode<T> node) {
+        if (node != null) {
+            printPOrder(node.getLeft());
+            printPOrder(node.getRight());
+            System.out.println(node.getData());
+        }
+    }
+
+    
+
+    private int printKS(BstNode<T> node, int remaining) {
+        if (node != null && remaining > 0) {
+            int result = printKS(node.getLeft(), remaining);
+            if (result != 0) {
+                int kth = result - 1;
+                if (kth == 0) {
+                    System.out.println(node.getData());
+                    return kth;
+                }
+                result = printKS(node.getRight(), kth);
+                return result;
+            } else
+                return 0;
+        }
+        return remaining;
+    }
+
+    
+
+    private void buildTV(BstNode<T> node, TreeMap<Integer,T> finalView, int numbering) {
+        if (node != null) {
+            //System.out.print(node.getData() + " ");
+            if(!finalView.containsKey(numbering))
+                finalView.put(numbering,node.getData());
+            buildTV(node.getLeft(), finalView, numbering+1);
+            buildTV(node.getRight(), finalView, numbering-1);
+        }
+    }
+
+
+    
+
+    public void printDFS()
+    {
+        Stack<BstNode<T>> workingStack = new Stack<>();
+        if (this.root != null) {
+            BstNode<T> start = this.root;
+            workingStack.push(start);
+            while(!workingStack.isEmpty())
+            {
+                start= workingStack.pop();
+                if(start.getLeft()== null && start.getRight() == null)
+                    System.out.print(start.getData() + " ");
+                else{
+                    //workingStack.push(start);
+                    if(start.getRight()!=null)
+                        workingStack.push( start.getRight());
+                    if(start.getLeft()!=null)
+                        workingStack.push(start.getLeft());
+                }
+             }
+        } else {
+            System.out.println("Empty Tree");
+        }
+    }
+   
+    private int getDiameterRecursive(BstNode<T> root) {
+        if(root==null)
+            return 0;
+
+        int left=0,right=0;
+        if(root.left != null)
+            left= getDiameterRecursive(root.left)+1;
+        if(root.right != null)
+            right = getDiameterRecursive(root.right)+1;
+
+        int diameterInThisLevel = left+right;
+        if(this.diameter < diameterInThisLevel)
+            diameter=diameterInThisLevel;
+
+        if(left > right)
+            return left;
+        else
+            return right;
+
+    }
+}
+
+class BstNode<T extends Comparable<T>> {
+    protected BstNode left;
+    protected BstNode right;
+    private T data;
+    private int level;
+
+    public BstNode(T data) {
+        this.data = data;
+        this.right = null;
+        this.left = null;
+    }
+
+    public BstNode getLeft() {
+        return left;
+    }
+
+    public void setLeft(BstNode left) {
+        this.left = left;
+    }
+
+    public BstNode getRight() {
+        return right;
+    }
+
+    public void setRight(BstNode right) {
+        this.right = right;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+}
