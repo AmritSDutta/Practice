@@ -1,5 +1,7 @@
 public class OddEvenPrintingThreads {
 
+
+
     public static Integer number = new Integer(0);
     public static  final Object doneLock = new Object();
     static final int COUNT_UPTO=10;
@@ -7,22 +9,22 @@ public class OddEvenPrintingThreads {
     public static void main(String args[])
     {
 
-    Thread odd =new Thread(new Runnable() {
+        Thread odd =new Thread(new Runnable() {
             @Override
             public void run() {
-                synchronized (OddEven.doneLock) {
-                    while(OddEven.number < COUNT_UPTO){
-                        if (OddEven.number % 2 != 0) {
+                synchronized (OddEvenPrintingThreads.doneLock) {
+                    while(OddEvenPrintingThreads.number < COUNT_UPTO){
+                        if (OddEvenPrintingThreads.number % 2 != 0) {
                             try {
-                                Thread.sleep(100);
-                                OddEven.doneLock.wait();
+                                //Thread.sleep(100);
+                                OddEvenPrintingThreads.doneLock.wait();
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
                         } else {
-                            OddEven.number++;
-                            System.out.println(Thread.currentThread().getName() + " : " + OddEven.number);
-                            OddEven.doneLock.notifyAll();
+                            OddEvenPrintingThreads.number++;
+                            System.out.println(Thread.currentThread().getName() + " : " + OddEvenPrintingThreads.number);
+                            OddEvenPrintingThreads.doneLock.notifyAll();
 
                         }
                     }
@@ -35,19 +37,19 @@ public class OddEvenPrintingThreads {
         Thread even =new Thread(new Runnable() {
             @Override
             public void run() {
-                synchronized (OddEven.doneLock) {
-                    while(OddEven.number < COUNT_UPTO){
-                        if (OddEven.number % 2 == 0) {
+                synchronized (OddEvenPrintingThreads.doneLock) {
+                    while(OddEvenPrintingThreads.number < COUNT_UPTO){
+                        if (OddEvenPrintingThreads.number % 2 == 0) {
                             try {
-                                Thread.sleep(100);
-                                OddEven.doneLock.wait();
+                                //Thread.sleep(100);
+                                OddEvenPrintingThreads.doneLock.wait();
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
                         } else {
-                            OddEven.number++;
-                            System.out.println(Thread.currentThread().getName() + " : " + OddEven.number);
-                            OddEven.doneLock.notifyAll();
+                            OddEvenPrintingThreads.number++;
+                            System.out.println(Thread.currentThread().getName() + " : " + OddEvenPrintingThreads.number);
+                            OddEvenPrintingThreads.doneLock.notifyAll();
 
                         }
                     }
@@ -67,5 +69,4 @@ public class OddEvenPrintingThreads {
         }
 
     }
-
 }
