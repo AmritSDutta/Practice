@@ -1,7 +1,7 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class LongestIncreasingSubsequence {
+public class LongestIncreasingSubSequence1 {
 
     static Map<Integer,Integer> memoization= new HashMap<>();
     static int globalMaxLength=0;
